@@ -28,8 +28,11 @@ The *constructor* creates a controls array, to store a set of action entries, de
 * the index of the chosen button, in the *Gamepad.buttons* array, provided by the API
 
 The *addControlEntry* method allows you to add an action to map.
+
 The *applyControlsMapping* method checks the actual buttons states, in order to fire mapped actions, and updates the object's carried joysticks states informations.
+
 The static *getConnectedGamepad* method returns the first Gamepad found, into the gamepads list in *navigator.getGamepads()* (this feature will evolve in the future, to allow using more than one Gamepad at once).
+
 The methods which name start with a double underscore, are reserved for the class's internal use.
 
 ### An embeded UI

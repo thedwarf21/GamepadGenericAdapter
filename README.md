@@ -31,7 +31,7 @@ The *addControlEntry* method allows you to add a new unmapped action : only the 
 
 The *setControlMapping* method allows you to map a button to an existing action. So, you will need to call *addControlEntry* before you set your mapping.
 
-The *applyControlsMapping* method checks the actual buttons states, in order to fire mapped actions, and updates the object's carried joysticks states informations.
+The *applyControlsMapping* method checks the actual buttons states, in order to fire pressed buttons mapped actions, and updates the object's carried joysticks states informations.
 
 The static *getConnectedGamepad* method returns the first Gamepad found, into the gamepads list in *navigator.getGamepads()* (this feature will evolve in the future, to allow using more than one Gamepad at once).
 

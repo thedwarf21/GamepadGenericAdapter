@@ -1,0 +1,44 @@
+<script type="text/javascript">
+ 
+	window.addEventListener('gamepadconnected', (event)=> {
+		console.log("Manette connectée");
+		console.log(event.gamepad);
+		window.gamepad = event.gamepad;
+	});
+	window.addEventListener('gamepaddisconnected', (event)=> {
+		console.log("Manette débranchée");
+	});
+
+	setInterval(()=> {
+		window.gamepad = navigator.getGamepads()[0];
+		if (window.gamepad) {
+			for (let i=0; i<window.gamepad.buttons.length; i++) {
+				let button = window.gamepad.buttons[i];
+				if (button.pressed)
+					console.log("Bouton %s appuyé", i);
+			}
+			for (let i=0; i<window.gamepad.axes.length; i++) {
+				let axis = window.gamepad.axes[i];
+				let stick = i > 1 ? "droit" : "gauche";
+				let sens;
+				if (i % 2 == 0) {
+					if (axis > 0.5)
+						sens = "la droite";
+					if (axis < -0.5)
+						sens = "la gauche";
+				} else {
+					if (axis > 0.5)
+						sens = "le bas";
+					if (axis < -0.5)
+						sens = "le haut";
+				}
+				
+				if (sens)
+					console.log("Le joystick %s est incliné vers %s", stick, sens);
+			}
+		} else {
+			console.log("En attente d'une manette");
+		}
+	}, 35);
+
+</script>

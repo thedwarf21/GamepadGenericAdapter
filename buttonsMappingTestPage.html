@@ -1,0 +1,25 @@
+<link rel="stylesheet" type="text/css" href="css/styles.css"/>
+<link rel="stylesheet" type="text/css" href="css/rs_dialog.css"/>
+<script type="text/javascript" src="scripts/rs_wcl.js"></script>
+<script type="text/javascript" src="scripts/rs_dialog.js"></script>
+<script type="text/javascript" src="scripts/rs_gamepad_generic_adapter.js"></script>
+<script type="text/javascript">
+
+	window.addEventListener('gamepadconnected', (event)=> {
+		console.log("Manette connectée");
+
+		let adapter = new GamepadGenericAdapter();
+		adapter.addControlEntry("shoot", ()=> { console.log("shoot"); });
+		adapter.addControlEntry("rotate left", ()=> { console.log("rotate left"); });
+		adapter.addControlEntry("rotate right", ()=> { console.log("rotate right"); });
+		adapter.addControlEntry("accelerate", ()=> { console.log("accelerate"); });
+		adapter.addControlEntry("decelerate", ()=> { console.log("decelerate"); });
+
+		let gcUI = new GamepadConfigUI(adapter);
+
+		setInterval(()=> {
+			adapter.applyControlsMapping();
+		}, 35);
+	});
+
+</script>

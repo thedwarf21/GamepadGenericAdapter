@@ -1,0 +1,30 @@
+<link rel="stylesheet" type="text/css" href="css/styles.css"/>
+<link rel="stylesheet" type="text/css" href="css/rs_dialog.css"/>
+<script type="text/javascript" src="scripts/rs_wcl.js"></script>
+<script type="text/javascript" src="scripts/rs_dialog.js"></script>
+<script type="text/javascript" src="scripts/rs_gamepad_generic_adapter.js"></script>
+<script type="text/javascript">
+
+	window.addEventListener('gamepadconnected', (event)=> {
+		console.log("Manette connectée");
+
+		let adapter = new GamepadGenericAdapter();
+
+		setInterval(()=> {
+			adapter.applyControlsMapping();
+			console.log({
+				angle_left: adapter.leftJoystickAngle,
+				intensity_left: adapter.leftJoystickIntensity,
+				angle_right: adapter.rightJoystickAngle,
+				intensity_right: adapter.rightJoystickIntensity,
+				angle_gyro: adapter.gyroAngle,
+				intensity_gyro: adapter.gyroIntensity
+			});
+		}, 35);
+	});
+
+	window.addEventListener('gamepaddisconnected', (event)=> {
+		console.log("Manette déconnectée");
+	})
+
+</script>

@@ -1,0 +1,35 @@
+body {
+	margin: 0;
+	overflow: hidden;
+	width: 100vw;
+	height: 100vh;
+
+	-moz-user-select: none;			/* Firefox */
+	-webkit-user-select: none;	/* Chrome, Safari, Opéra depuis la version 15 */
+	-ms-user-select: none;			/* Internet explorer depuis la version 10 et Edge */
+	user-select: none;					/* Propriété standard */
+}
+
+/**
+ * Popup configuration manette
+ */
+.control-item-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 2vh;
+    margin-left: 5vh;
+    margin-right: 5vh;
+}
+
+.control-name {
+    font-size: 2.4vh;
+    font-family: sans-serif;
+    font-weight: bold;
+    width: 15vh;
+}
+
+.button-mapped {
+    font-size: 2.1vh;
+    font-family: monospace;
+    width: 28vh;
+}

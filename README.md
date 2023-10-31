@@ -27,7 +27,9 @@ The *constructor* creates a controls array, to store a set of action entries, de
 * a function to execute
 * the index of the chosen button, in the *Gamepad.buttons* array, provided by the API
 
-The *addControlEntry* method allows you to add an action to map.
+The *addControlEntry* method allows you to add a new unmapped action : only the name and the function to execute can be set.
+
+The *setControlMapping* method allows you to map a button to an existing action. So, you will need to call *addControlEntry* before you set your mapping.
 
 The *applyControlsMapping* method checks the actual buttons states, in order to fire mapped actions, and updates the object's carried joysticks states informations.
 

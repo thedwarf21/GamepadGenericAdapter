@@ -13,12 +13,12 @@
 		setInterval(()=> {
 			adapter.applyControlsMapping();
 			console.log({
-				x_left: adapter.leftJoystickX,
-				y_left: adapter.leftJoystickY,
-				x_right: adapter.rightJoystickX,
-				y_right: adapter.rightJoystickY,
-				x_gyro: adapter.gyroX,
-				y_gyro: adapter.gyroY
+				x_left: adapter.leftJoystick.x,
+				y_left: adapter.leftJoystick.y,
+				x_right: adapter.rightJoystick.x,
+				y_right: adapter.rightJoystick.y,
+				x_gyro: adapter.accelerometer ? adapter.accelerometer.x : "-",
+				y_gyro: adapter.accelerometer ? adapter.accelerometer.y : "-"
 			});
 		}, 35);
 	});

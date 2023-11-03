@@ -87,8 +87,8 @@ class GamepadJoystick {
 	__computeAngleAndIntensity() {
 		this.angle = (Math.atan2(this.y, this.x) * 180) / Math.PI;
 		this.intensity 	= Math.abs(this.x) > Math.abs(this.y) 
-						? Math.abs(this.x) 
-						: Math.abs(this.y);
+				? Math.abs(this.x) 
+				: Math.abs(this.y);
 	}
 }
 
@@ -143,8 +143,8 @@ class GamepadConfigUI {
 		let button_mapped = document.createElement("DIV");
 		button_mapped.classList.add("button-mapped");
 		button_mapped.innerHTML = buttonIndex 
-								? "Bouton " + buttonIndex 
-								: "-";
+					? "Bouton " + buttonIndex 
+					: "-";
 		return button_mapped;
 	}
 

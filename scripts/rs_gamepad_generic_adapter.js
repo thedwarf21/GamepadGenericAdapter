@@ -1,12 +1,17 @@
+/**
+ * Couche d'abstraction permettant d'interfacer des contrôles à l'API native Gamepad.
+ * Référence une liste de contrôles. Chacun d'entre eux se caractérise par :
+ *    - un nom destiné à l'affichage pour configuration de la manette
+ *    - une fonction rattachée, exécutant l'action correspondante
+ *    - l'indice du bouton de manette rattaché, dans la liste fournie par l'API
+ *
+ * @class      GamepadGenericAdapter
+ */
 class GamepadGenericAdapter {
 	constructor() { this.controls = []; }
 
-	addControlEntry(name, fnAction) {
-		this.controls.push({
-			name: name,
-			execute: fnAction,
-			buttonIndex: undefined
-		});
+	addControlEntry(name, fnAction, isAuto) {
+		this.controls.push(new GamepadControl(name, fnAction, isAuto));
 	}
 
 	setControlMapping(controlIndex, buttonIndex) {
@@ -16,10 +21,8 @@ class GamepadGenericAdapter {
 	applyControlsMapping() {
 		let gamepad = GamepadGenericAdapter.getConnectedGamepad();
 		this.__updateJoysticksStates(gamepad);
-		for (let control of this.controls) {
-			if (control.buttonIndex && gamepad.buttons[control.buttonIndex].pressed)
-				control.execute();
-		}
+		for (let control of this.controls)
+			control.applyContext(gamepad);
 	}
 
 	static getConnectedGamepad() {
@@ -30,39 +33,71 @@ class GamepadGenericAdapter {
 	}
 
 	__updateJoysticksStates(gamepad) {
-		this.leftJoystickX = gamepad.axes[0]; // négatif=>gauche; positif=>droite
-		this.leftJoystickY = gamepad.axes[1]; // négatif=>haut; positif=>bas
-		this.rightJoystickX = gamepad.axes[2];
-		this.rightJoystickY = gamepad.axes[3];
-		if (gamepad.axes.length > 4) {
-			this.gyroX = gamepad.axes[4];
-			this.gyroY = gamepad.axes[5];
-		}
-		this.__upadteJoystickAnglesAndIntensityRates();
+		this.leftJoystick = new GamepadJoystick(gamepad.axes[0], gamepad.axes[1]);
+		this.rightJoystick = new GamepadJoystick(gamepad.axes[2], gamepad.axes[3]);
+		if (gamepad.axes.length > 4)
+			this.accelerometer = new GamepadJoystick(gamepad.axes[4], gamepad.axes[5]);
 	}
-
-	__upadteJoystickAnglesAndIntensityRates() {
-		this.leftJoystickAngle = this.__getAngleFromXyRates(this.leftJoystickX, this.leftJoystickY);
-		this.leftJoystickIntensity = this.__getIntensityFromXyRates(this.leftJoystickX, this.leftJoystickY);
-
-		this.rightJoystickAngle = this.__getAngleFromXyRates(this.rightJoystickX, this.rightJoystickY);
-		this.rightJoystickIntensity = this.__getIntensityFromXyRates(this.rightJoystickX, this.rightJoystickY);
-
-		if (this.gyroX != undefined && this.gyroY != undefined) {
-			this.gyroAngle = this.__getAngleFromXyRates(this.gyroX, this.gyroY);
-			this.gyroIntensity = this.__getIntensityFromXyRates(this.gyroX, this.gyroY);
-		}
-	}
-
-	__getAngleFromXyRates(x_rate, y_rate) { return (Math.atan2(y_rate, x_rate) * 180) / Math.PI; }
-
-	__getIntensityFromXyRates(x_rate, y_rate) {
-		return Math.abs(x_rate) > Math.abs(y_rate) 
-				? Math.abs(x_rate) 
-				: Math.abs(y_rate);
-		}
 }
 
+/**
+ * Représente un contrôle de Gamepad, géré par GamepadGenericAdapter.
+ *
+ * @class      GamepadControl
+ */
+class GamepadControl {
+	constructor(name, fnAction, isAuto) {
+		this.name = name;
+		this.execute = fnAction;
+		this.isAuto = isAuto;
+		this.executeFired = false;
+		this.buttonIndex = undefined;
+	}
+
+	applyContext(gamepad) {
+		if (this.__isButtonPressed(gamepad)) {
+			if (this.__isExecutionPossible()) {
+				this.execute();
+				this.executeFired = true;
+			}
+		} else this.executeFired = false;
+	}
+
+	__isButtonPressed(gamepad) {
+		return this.buttonIndex && gamepad.buttons[this.buttonIndex].pressed;
+	}
+
+	__isExecutionPossible() {
+		return !this.executeFired || this.isAuto;
+	}
+}
+
+/**
+ * Représente un joystick de Gamepad, géré par GamepadGenericAdapter.
+ *
+ * @class      GamepadJoystick
+ */
+class GamepadJoystick {
+	constructor(x_rate, y_rate) {
+		this.x = x_rate;
+		this.y = y_rate;
+		this.__computeAngleAndIntensity();
+	}
+
+	__computeAngleAndIntensity() {
+		this.angle = (Math.atan2(this.y, this.x) * 180) / Math.PI;
+		this.intensity 	= Math.abs(this.x) > Math.abs(this.y) 
+						? Math.abs(this.x) 
+						: Math.abs(this.y);
+	}
+}
+
+/**
+ * Génère et gère l'UI permettant le mapping de GamepadGenericAdapter
+ * Le constructeur de la classe attend une instance de GamepadGenericAdapter en paramètre
+ *
+ * @class      GamepadConfigUI
+ */
 class GamepadConfigUI {
 	constructor(game_controls_mapper, fnOnUiClose) {
 		this.controls_mapper = game_controls_mapper;
